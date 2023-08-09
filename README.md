@@ -1,11 +1,10 @@
 # Topton-n100-Bios-Settings
 Bios settings for the CWWK/Topton N100 mini PC for efficient power usage.
 
-The purpose of this list, is to document _most_ of the BIOS settings of the N100 mini PC [^1] and track the necessary settings for ***power efficent*** usage. Most of the selected setting were proposed and gather from the ServerTheHome.com forums [^2].
- 
-## References
-- [^1]: The N100 mini PC - [serverthehome.com N100 Review](https://www.servethehome.com/fanless-intel-n100-firewall-and-virtualization-appliance-review/)
-- [^2]: Inspiration for BIOS settings: [serverthehome.com N100 Forum](https://forums.servethehome.com/index.php?threads/cwwk-topton-nxxx-quad-nic-router.39685/)
+The purpose of this list, is to document _most_ of the BIOS settings of the N100 mini PC [^1] and track the necessary settings for ***power efficent*** usage. Most of the selected setting were proposed and gather from the ServerTheHome.com forums [^2]. 
+
+[^1]: The N100 mini PC - [serverthehome.com N100 Review](https://www.servethehome.com/fanless-intel-n100-firewall-and-virtualization-appliance-review/)
+[^2]: Inspiration for BIOS settings: [serverthehome.com N100 Forum](https://forums.servethehome.com/index.php?threads/cwwk-topton-nxxx-quad-nic-router.39685/)
 
 # Summary of Implemented BIOS changes
 1. Main
@@ -19,44 +18,44 @@ The purpose of this list, is to document _most_ of the BIOS settings of the N100
      - Platform PL1 => `Disabled`
      - Platform PL2 => `Disabled`
    - ?? ➡️ ??
-     - Package PL1 => `12500`
+     - Package PL1 => `6000` `10000` `12500`
      - Package PL2 => `25000`
      - Energy Efficient Turbo => `Enable`
    - ?? C States => `Enable`
    - ??Package limit => `C10`
-   - ?? PECI => `Disabled`
+   - CPU
+     - VMX => `Enabled` ℹ️ Needed for virtualization, else disable
+     - PECI => `Disabled` / `Enabled`
    - ?? ➡️ EPB override over PECI => `Enable`
 4. Chipset
+   - SATA => `Disabled`
+   - USB HSII on xHCI => `Disabled`
+   - HD Audio => `Disabled`
+   - Serial I2C5 Controller => `Disabled`
+   - eMMC 5.1 Controller => `Disabled`
+   - Sensor Hub Type => `None`
+   - GT ➡️ Power Management➡️ Maximum GT Freq => 100 MHz
    - PCH-IO Config ➡️ PCI Express Config
-     - PCI Root \#1-6;8-10
+     - PCI Root \#1 ℹ️ Drive errors if any L1 option changed
+       - ASPM => `Auto`
+       - L1 Substates => `Disabled`
+       - L1 low => `Disabled`  
+     - PCI Root \#2-6;12
        - ASPM => `Auto`
        - L1 Substates => `L1.1&L1.2`
        - L1 low => `Enable`          
-     - PCI Root \#7 ℹ️ Needed for networking within Ubuntu
+     - PCI Root \#7;9;10;11 ℹ️ Needed for networking (NIC 1-4); disable is not needed
        - ASPM => `Auto`
        - L1 Substates => `Disabled`
        - L1 low => `Enable`   
-5. Security
+6. Security
    - ?? ➡️ SM3_256 PCR Bank => `Disabled` ❗
 
-- All unneeded hardware off: sound, emmc, sata, tpm
-~~- PECI off (found in the N5105 thread)~~
-~~- EPB override over PECI enabled~~
-- Platform PL1&2 disabled (no time yet to play with)
-~~- power limit 4 override disabled~~
-~~- Package PL1 = 10000, PL2 = 25000, Energy eff- turbo enabled~~
-~~- C-States enabled, Package limit C10~~
-
-~~Chipset -> PCH-IO Config -> PCI Express Config: every PCI root except #7 : ASPM auto, L1 Substates L1.1&L1.2, L1 low = enabled. On port 7 ASPM auto, L1 substaes disabled, L1 low enabled - otherwise network under Ubuntu wasn't working.~~
+> [!NOTE]
+> Following still needs to be added
+> - All unneeded hardware off: sound, emmc, sata, tpm
 
 
-## Devices on the motherboard
-Running the `lsusb` command
-```
-  Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-  Bus 001 Device 003: ID 05e3:0751 Genesys Logic, Inc. microSD Card Reader
-  Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-```
 
 # N100 BIOS Sections
 Each main page will be discussed as it's own section. Submenus are discussed in the subsection that follows
@@ -181,6 +180,26 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 
 
 ## Boot
+
+# Devices on the motherboard
+Running the `lspci` command
+```
+ ??
+ 02:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller SM951/PM951 (rev 01)
+ 03:00.0 Ethernet controller: Intel Corporation Device 125c (rev 04)
+ 04:00.0 Ethernet controller: Intel Corporation Device 125c (rev 04)
+ 05:00.0 Ethernet controller: Intel Corporation Device 125c (rev 04)
+ 06:00.0 Ethernet controller: Intel Corporation Device 125c (rev 04)
+```
+
+Running the `lsusb` command
+```
+  Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+  Bus 001 Device 003: ID 05e3:0751 Genesys Logic, Inc. microSD Card Reader
+  Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+```
+
+# References
 
 
 
