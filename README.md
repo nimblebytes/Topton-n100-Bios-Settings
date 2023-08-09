@@ -1,19 +1,62 @@
 # Topton-n100-Bios-Settings
-Bios settings for the CWWK/Topton N100 mini PC  for efficient power usage.
+Bios settings for the CWWK/Topton N100 mini PC for efficient power usage.
 
-The purpose of this list, is to summarize and document all the BIOS setting proposed on the ServerTheHome.com forum for ***power efficent*** usage on the N100.
-
+The purpose of this list, is to document _most_ of the BIOS settings of the N100 mini PC [^1] and track the necessary settings for ***power efficent*** usage. Most of the selected setting were proposed and gather from the ServerTheHome.com forums [^2].
+ 
 ## References
-- The N100 mini PC: [serverthehome.com N100 Review](https://www.servethehome.com/fanless-intel-n100-firewall-and-virtualization-appliance-review/)
-- Inspiration for BIOS settings: [serverthehome.com N100 Forum](https://forums.servethehome.com/index.php?threads/cwwk-topton-nxxx-quad-nic-router.39685/)
+- [^1]: The N100 mini PC - [serverthehome.com N100 Review](https://www.servethehome.com/fanless-intel-n100-firewall-and-virtualization-appliance-review/)
+- [^2]: Inspiration for BIOS settings: [serverthehome.com N100 Forum](https://forums.servethehome.com/index.php?threads/cwwk-topton-nxxx-quad-nic-router.39685/)
+
+# Summary of Implemented BIOS changes
+1. Main
+   - System Lanuage => `English`
+   - System Date => `<Current Date>`
+   - System Time => `<Current Time>`
+2. Advanced
+   - ?? ➡️ ??
+     - Power Limit 4 => `Override`
+   - ?? ➡️ ??
+     - Platform PL1 => `Disabled`
+     - Platform PL2 => `Disabled`
+   - ?? ➡️ ??
+     - Package PL1 => `12500`
+     - Package PL2 => `25000`
+     - Energy Efficient Turbo => `Enable`
+   - ?? C States => `Enable`
+   - ??Package limit => `C10`
+   - ?? PECI => `Disabled`
+   - ?? ➡️ EPB override over PECI => `Enable`
+4. Chipset
+   - PCH-IO Config ➡️ PCI Express Config
+     - PCI Root \#1-6;8-10
+       - ASPM => `Auto`
+       - L1 Substates => `L1.1&L1.2`
+       - L1 low => `Enable`          
+     - PCI Root \#7 ℹ️ Needed for networking within Ubuntu
+       - ASPM => `Auto`
+       - L1 Substates => `Disabled`
+       - L1 low => `Enable`   
+5. Security
+   - ?? ➡️ SM3_256 PCR Bank => `Disabled` ❗
+
+- All unneeded hardware off: sound, emmc, sata, tpm
+~~- PECI off (found in the N5105 thread)~~
+~~- EPB override over PECI enabled~~
+- Platform PL1&2 disabled (no time yet to play with)
+~~- power limit 4 override disabled~~
+~~- Package PL1 = 10000, PL2 = 25000, Energy eff- turbo enabled~~
+~~- C-States enabled, Package limit C10~~
+
+~~Chipset -> PCH-IO Config -> PCI Express Config: every PCI root except #7 : ASPM auto, L1 Substates L1.1&L1.2, L1 low = enabled. On port 7 ASPM auto, L1 substaes disabled, L1 low enabled - otherwise network under Ubuntu wasn't working.~~
+
 
 ## Devices on the motherboard
 Running the `lsusb` command
-``
+```
   Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
   Bus 001 Device 003: ID 05e3:0751 Genesys Logic, Inc. microSD Card Reader
   Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-``
+```
 
 # N100 BIOS Sections
 Each main page will be discussed as it's own section. Submenus are discussed in the subsection that follows
@@ -21,18 +64,18 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 - **Not all settings are listed, just the ones that are relevant or changed**
 
 ## Main 
-| Setting | Value  | Adjusted | Description |
-|-|-|-|-|
-| System Lanuage   | `English` | x | - |
-| System Date     | `<Current Date>` | x | - |
-| System Time | `<Current Time>` | x | - |
+| Setting | Value  | Adjusted | 
+|-|-|-|
+| System Lanuage   | `English` | x | 
+| System Date     | `<Current Date>` | x | 
+| System Time | `<Current Time>` | x | 
  
 ## Advanced
 | Setting | Value  | Adjusted | Description |
 |-|-|-|-|
-| Efficient-Core Information   | \<Submenu\> | - | Indicates whether efficient (low-power) CPU cores are available and functioning. |
-| Performance-Core Information | \<Submenu\> | - | Indicates whether high-performance CPU cores are available and functioning. |
-| _\<Static Values\>_          | - | - | _Unchanging parameter values in the BIOS_. |
+| Efficient-Core Information   | _\<submenu\>_ | - | Indicates whether efficient (low-power) CPU cores are available and functioning. |
+| Performance-Core Information | _\<submenu\>_ | - | Indicates whether high-performance CPU cores are available and functioning. |
+| _\<static values\>_          | - | - | _Unchanging parameter values in the BIOS_. |
 | C6DRAM                       | `Enabled` | - | Activates the C6DRAM power-saving state to reduce memory controller power consumption. |
 | CPU Flex Ratio Override      | `Disabled` | - | Allows manual control over the CPU's frequency ratio, potentially impacting performance. |
 | CPU Flex Ratio Settings      | 8  | - | Provides settings for adjusting the CPU's frequency ratio under different operating conditions. |
@@ -47,29 +90,11 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 | Machine Check                | `Enabled` | - | Enables the Machine Check Architecture (MCA) for hardware error detection and correction. |
 | MonitorMWait                 | `Enabled` | - | Enables support for the MONITOR and MWAIT instructions, enhancing power management efficiency. |
 
-### <section> ➡️ Advanced
-
-| Setting | Value  | Adjusted | Description |
-|-|-|-|-|
-| Turbo Ratio Limit Options    | \<Submenu\>   | - | Max CPU multiplier during turbo boost, affecting performance for intensive tasks. |
-| Energy Efficient P-state     | `Enabled` | - | Dynamically adjusts CPU power state for balanced performance and energy efficiency. |
-| Package Power Limit MSR Lock | `Disabled` | - | Prevents user changes to CPU package power limits for enhanced system stability. |
-| Power Limit 1 Override       | `Enabled` | - | Overrides default CPU power limit, potentially improving performance at higher power usage. |
-| Power Limit 1                | ~~10000~~ 8000 | x | Sets max sustainable CPU power (in milliwatts) under normal conditions, influencing performance and thermal behavior. |
-| Power Limit 1 Time Window    | 0           | - | Determines duration for CPU power consumption at Power Limit 1 before adjustments, affecting short-term performance. |
-| Power Limit 2 Override       | `Enabled` | - | Overrides secondary CPU power limit for brief performance boosts. |
-| Power Limit 2                | 25000       | x | Establishes secondary CPU power threshold (in milliwatts), potentially higher than Power Limit 1, for short-duration tasks. |
-| Energy Efficient Turbo       | `Enabled` |   | Optimizes turbo boost for balanced energy usage and performance during sustained workloads. |
-> [!NOTE]
-> Power Limit 1 (PL1) and Power Limit 2 (PL2) are parameters commonly found in modern CPUs' power management systems. These parameters play a significant role in determining how much power the CPU can consume and for how long under different operating conditions.
-> - PL1 is used to define the maximum sustainable power consumption of the CPU over a longer period of time. It helps control the CPU's average power usage under typical workloads.
-> - PL2 is designed to accommodate brief periods of increased CPU power usage, such as during bursts of intense computational tasks or short-term performance boosts.
-> - The Power Limit 1 Time Window (PL1 Time Window) is a CPU parameter that dictates the duration during which the CPU can operate near its maximum power limit (PL1), balancing short bursts of high-performance tasks while preventing prolonged overheating. It enables efficient power management by allowing controlled performance boosts within defined time intervals while respecting thermal and power constraints.
-
 ## Section 2
 
 | Setting | Value  | Adjusted | Description |
 |-|-|-|-|
+| \<more\>                                | - | - | _Placeholder for additional BIOS settings_. |
 | Intel Speed Shift Technology  | `Enabled` | - | Enables dynamic adjustment of CPU frequency and voltage for faster response to workload changes. |
 | Per Core p State OS control mode | `Enabled` | - | Allows the operating system to manage individual core power states for optimized performance. |
 | HwP Autonomous Per Core P State | `Enabled` | - | Enables each core to autonomously select its power state based on workload demands. |
@@ -78,8 +103,8 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 | HwP Lock                  | `Enabled` | - | Locks hardware-controlled core power states to prevent autonomous changes by the CPU. |
 | HDC Control               | `Enabled` | - | Allows Host-Directed Communication (HDC) between the OS and the Intel Management Engine (ME). |
 | Turbo Mode                | `Enabled` | - | Enables or disables the CPU's turbo boost mode for improved performance under heavy workloads. |
-| View/Configure Turbo Options | \<Submenu\> | - | Accesses options to view and configure turbo boost parameters for the CPU. |
-| CPU VR Settings           | \<Submenu\> | - | Controls the CPU voltage regulator (VR) settings for managing CPU power delivery. |
+| View/Configure Turbo Options | _\<submenu\>_ | - | Accesses options to view and configure turbo boost parameters for the CPU. |
+| CPU VR Settings           | _\<submenu\>_ | - | Controls the CPU voltage regulator (VR) settings for managing CPU power delivery. |
 | Platform PL 1 Enable      | `Enabled` | - | Enables or disables the first platform power limit (PL1) for controlling CPU power consumption. |
 | Platform PL1 Power        | 12500 | - | Specifies the maximum power consumption allowed under the first platform power limit (PL1), controlling sustained CPU performance and thermal behavior. |
 | Platform PL 1 Time Window | 0 | - | Sets the time duration for the first platform power limit (PL1) to regulate CPU power consumption. |
@@ -91,24 +116,44 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 | C-States Auto Demotion    | `C1` | - | Allows automatic demotion of C states to reduce latency and improve performance under light loads. |
 | C-State Un-Demotion       | `C1` | - | Allows automatic un-demotion of C states to optimize power and performance transitions. |
 
+### <section> ➡️ Advanced
+
+| Setting | Value  | Adjusted | Description |
+|-|-|-|-|
+| Turbo Ratio Limit Options    | _\<submenu\>_   | - | Max CPU multiplier during turbo boost, affecting performance for intensive tasks. |
+| Energy Efficient P-state     | `Enabled` | - | Dynamically adjusts CPU power state for balanced performance and energy efficiency. |
+| Package Power Limit MSR Lock | `Disabled` | - | Prevents user changes to CPU package power limits for enhanced system stability. |
+| Power Limit 1 Override       | `Enabled` | - | Overrides default CPU power limit, potentially improving performance at higher power usage. |
+| Power Limit 1                | ~~10000~~ 8000 | x | Sets max sustainable CPU power (in milliwatts) under normal conditions, influencing performance and thermal behavior. |
+| Power Limit 1 Time Window    | 0           | - | Determines duration for CPU power consumption at Power Limit 1 before adjustments, affecting short-term performance. |
+| Power Limit 2 Override       | `Enabled` | - | Overrides secondary CPU power limit for brief performance boosts. |
+| Power Limit 2                | 25000       | x | Establishes secondary CPU power threshold (in milliwatts), potentially higher than Power Limit 1, for short-duration tasks. |
+| Energy Efficient Turbo       | `Enabled` |   | Optimizes turbo boost for balanced energy usage and performance during sustained workloads. |
+> [!NOTE]
+> - Platform PL1 vs Power Limit 1 (PL1): Platform PL1 refers to the first platform power limit, which is a power consumption threshold defined for the entire platform, including the CPU, integrated graphics, and other components; while Power Limit 1, is a power consumption limit specifically associated with the CPU.
+> - Power Limit 1 (PL1) and Power Limit 2 (PL2) are parameters commonly found in modern CPUs' power management systems. These parameters play a significant role in determining how much power the CPU can consume and for how long under different operating conditions.
+> - PL1 is used to define the maximum sustainable power consumption of the CPU over a longer period of time. It helps control the CPU's average power usage under typical workloads.
+> - PL2 is designed to accommodate brief periods of increased CPU power usage, such as during bursts of intense computational tasks or short-term performance boosts.
+> - The Power Limit 1 Time Window (PL1 Time Window) is a CPU parameter that dictates the duration during which the CPU can operate near its maximum power limit (PL1), balancing short bursts of high-performance tasks while preventing prolonged overheating. It enables efficient power management by allowing controlled performance boosts within defined time intervals while respecting thermal and power constraints.
+
 
 ## Chipset
 | Setting | Value  | Adjusted | Description |
 |-|-|-|-|
-| PCI Express Configuration                | \<Submenu\> | - | Configures various settings related to PCI Express interfaces. |
-| SATA Configuration                       | \<Submenu\> | - | Configures settings for Serial ATA (SATA) interfaces and drives. |
-| USB Configuration                        | \<Submenu\> | - | Configures USB (Universal Serial Bus) settings and behavior. |
-| Security Configuration                   | \<Submenu\> | - | Manages security-related settings, such as password protection and authentication. |
-| HD Audio Configuration                   | \<Submenu\> | - | Configures settings for High Definition Audio (HD Audio) interfaces and devices. |
-| THC Configuration                        | \<Submenu\> | - | Configures settings for Trusted Hardware Configuration (THC) features. |
-| SerialIO Configuration                   | \<Submenu\> | - | Configures settings for Serial I/O interfaces, such as UART and SPI. |
-| SCS Configuration                        | \<Submenu\> | - | Configures settings for System Control and Services (SCS) interfaces. |
-| ISH Configuration                        | \<Submenu\> | - | Configures settings for Intel Sensor Hub (ISH) interfaces. |
-| PCH Thermal Throttling Control           | \<Submenu\> | - | Manages thermal throttling and protection mechanisms for the Platform Controller Hub (PCH). |
+| PCI Express Configuration                | _\<submenu\>_ | - | Configures various settings related to PCI Express interfaces. |
+| SATA Configuration                       | _\<submenu\>_ | - | Configures settings for Serial ATA (SATA) interfaces and drives. |
+| USB Configuration                        | _\<submenu\>_ | - | Configures USB (Universal Serial Bus) settings and behavior. |
+| Security Configuration                   | _\<submenu\>_ | - | Manages security-related settings, such as password protection and authentication. |
+| HD Audio Configuration                   | _\<submenu\>_ | - | Configures settings for High Definition Audio (HD Audio) interfaces and devices. |
+| THC Configuration                        | _\<submenu\>_ | - | Configures settings for Trusted Hardware Configuration (THC) features. |
+| SerialIO Configuration                   | _\<submenu\>_ | - | Configures settings for Serial I/O interfaces, such as UART and SPI. |
+| SCS Configuration                        | _\<submenu\>_ | - | Configures settings for System Control and Services (SCS) interfaces. |
+| ISH Configuration                        | _\<submenu\>_ | - | Configures settings for Intel Sensor Hub (ISH) interfaces. |
+| PCH Thermal Throttling Control           | _\<submenu\>_ | - | Manages thermal throttling and protection mechanisms for the Platform Controller Hub (PCH). |
 | Skip VCCIN_AUX Configuration            | `Disabled` | - | Configures settings related to VCCIN_AUX voltage rail. |
-| FIVR Configuration                      | \<Submenu\> | - | Configures settings for Fully Integrated Voltage Regulator (FIVR) if present. |
-| PMC Configuration                        | \<Submenu\> | - | Configures settings for Platform Management Controller (PMC) features. |
-| PCH LAN Controller                      | _<Static|_ | - | Configures settings for the Platform Controller Hub (PCH) LAN controller. |
+| FIVR Configuration                      | _\<submenu\>_ | - | Configures settings for Fully Integrated Voltage Regulator (FIVR) if present. |
+| PMC Configuration                        | _\<submenu\>_ | - | Configures settings for Platform Management Controller (PMC) features. |
+| PCH LAN Controller                      | _<static>_ | - | Configures settings for the Platform Controller Hub (PCH) LAN controller. |
 | Sensor Hub Type                         | `None` | - | Specifies the type and behavior of the sensor hub on the motherboard. |
 | DeepSx Power Policies                   | `Disabled` | - | Configures power policies for system states with deep power savings (e.g., S3, S4). |
 | Wake On WLAN and BT Enable              | `Disabled` | - | Enables or disables Wake On WLAN and Bluetooth functionality. |
@@ -118,7 +163,6 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 | Compatible Revision ID                  | `Disabled` | - | Specifies the revision ID compatibility for PCIe devices. |
 | \<more\>                                | - | - | _Placeholder for additional BIOS settings_. |
 
-Note: The "Value" and "Adjusted" columns are left blank, as requested.
 ## Security
 
 ### <section> ➡️ Advanced
@@ -135,7 +179,6 @@ Note: The "Value" and "Adjusted" columns are left blank, as requested.
 | TPM 2.0 InterfaceType       | `CRB` | - | Defines the type of interface used to communicate with the Trusted Platform Module (TPM) 2.0. |
 | Device Select               | `Auto` | - | Selects a specific device for configuration or interaction within the BIOS settings. |
 
-Note: The "Value" and "Adjusted" columns are left blank, as requested.
 
 ## Boot
 
