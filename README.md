@@ -71,7 +71,7 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
  
 ## Advanced
 | Setting | Value  | Adjusted | Description |
-|-|-|-|-|
+|---:|:---|:---:|:---|
 | Efficient-Core Information   | _\<submenu\>_ | - | Indicates whether efficient (low-power) CPU cores are available and functioning. |
 | Performance-Core Information | _\<submenu\>_ | - | Indicates whether high-performance CPU cores are available and functioning. |
 | _\<static values\>_          | - | - | _Unchanging parameter values in the BIOS_. |
@@ -92,7 +92,7 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 ## Section 2
 
 | Setting | Value  | Adjusted | Description |
-|-|-|-|-|
+|---:|:---|:---:|:---|
 | \<more\>                                | - | - | _Placeholder for additional BIOS settings_. |
 | Intel Speed Shift Technology  | `Enabled` | - | Enables dynamic adjustment of CPU frequency and voltage for faster response to workload changes. |
 | Per Core p State OS control mode | `Enabled` | - | Allows the operating system to manage individual core power states for optimized performance. |
@@ -118,7 +118,7 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 ### <section> ➡️ Advanced
 
 | Setting | Value  | Adjusted | Description |
-|-|-|-|-|
+|---:|:---|:---:|:---|
 | Turbo Ratio Limit Options    | _\<submenu\>_   | - | Max CPU multiplier during turbo boost, affecting performance for intensive tasks. |
 | Energy Efficient P-state     | `Enabled` | - | Dynamically adjusts CPU power state for balanced performance and energy efficiency. |
 | Package Power Limit MSR Lock | `Disabled` | - | Prevents user changes to CPU package power limits for enhanced system stability. |
@@ -138,7 +138,7 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 
 ## Chipset
 | Setting | Value  | Adjusted | Description |
-|-|-|-|-|
+|---:|:---|:---:|:---|
 | PCI Express Configuration                | _\<submenu\>_ | - | Configures various settings related to PCI Express interfaces. |
 | SATA Configuration                       | _\<submenu\>_ | - | Configures settings for Serial ATA (SATA) interfaces and drives. |
 | USB Configuration                        | _\<submenu\>_ | - | Configures USB (Universal Serial Bus) settings and behavior. |
@@ -166,7 +166,7 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 
 ### <section> ➡️ Advanced
 | Setting | Value  | Adjusted | Description |
-|-|-|-|-|
+|---:|:---|:---:|:---|
 | SHA256 PCR Bank             | `Enabled` | - | Specifies the bank of Platform Configuration Registers (PCRs) used for SHA-256 hashing. |
 | SHA384 PCR Bank             | `Disabled` | - | Specifies the bank of PCRs used for SHA-384 hashing. |
 | SM3_256 PCR Bank            | `Disabled` | - | Specifies the bank of PCRs used for SM3_256 hashing. SM3-256 is standardized and widely used in China, for applications involving data security and cryptographic protocols. |
@@ -183,7 +183,7 @@ Each main page will be discussed as it's own section. Submenus are discussed in 
 
 # Devices on the motherboard
 Running the `lspci` command
-```
+```console
  ??
  02:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller SM951/PM951 (rev 01)
  03:00.0 Ethernet controller: Intel Corporation Device 125c (rev 04)
@@ -193,11 +193,38 @@ Running the `lspci` command
 ```
 
 Running the `lsusb` command
-```
+```console
   Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
   Bus 001 Device 003: ID 05e3:0751 Genesys Logic, Inc. microSD Card Reader
   Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 ```
+
+# Performance testing
+
+## Passmark
+
+
+## System and CPU temperatures
+
+From the command line, install the lm-sensor package:
+```console
+apt install lm-sensors
+```
+
+Then configure the package, and answer the questions ("yes" to all options should be safe)
+```console 
+sensors-detect
+```
+
+Get the system temperatures:
+```console
+sensors
+
+# Output in json format
+sensors -j
+```
+
+
 
 # References
 
