@@ -10,7 +10,7 @@ dev.igc.1.epp = 0
 dev.igc.2.epp = 0
 dev.igc.3.epp = 0
 ```
-> [:NOTE]
+> [!NOTE]
 > These changes only make sense on a direct install, or if in Proxmox the processor is type "host" and the NICs are directly passed through.
 > Additional information regarding the CPU mitigations: ![OPNSense - Hardening](https://docs.opnsense.org/troubleshooting/hardening.html#spectre-and-meltdown)
 
